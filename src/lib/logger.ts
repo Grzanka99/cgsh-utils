@@ -13,20 +13,26 @@ const mapToAscii = (t: LogType) => {
   }
 };
 
+export const getLoggedText = (type: LogType, msg: string): string => {
+  const includeTime = process.env.LOGGER_INCLUDE_TIME === 'true';
+  const time = includeTime
+    ? `\x1b[2m[${new Date().toISOString()}]\x1b[0m `
+    : '';
+
+  const text = `${time}\x1b[1m${mapToAscii(type)}${type}:\x1B[0m ${msg}`;
+
+  return text;
+};
+
 const loggerFactory: LoggerFactory =
   (type) =>
-  (msg): true => {
-    const includeTime = process.env.LOGGER_INCLUDE_TIME === 'true';
-    const time = includeTime
-      ? `\x1b[2m[${new Date().toISOString()}]\x1b[0m `
-      : '';
+    (msg): true => {
+      if (process.env.NODE_ENV === 'production') return true;
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`${time}\x1b[1m${mapToAscii(type)}${type}:\x1B[0m`, msg);
-    }
+      console.log(getLoggedText(type, msg));
 
-    return true;
-  };
+      return true;
+    };
 
 export const logger: Logger = {
   info: loggerFactory(LogType.info),
