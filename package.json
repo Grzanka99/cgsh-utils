@@ -1,6 +1,6 @@
 {
   "name": "@cgsh/utils",
-  "version": "0.1.2",
+  "version": "0.1.3-rc1",
   "description": "some useful utils that I like to use",
   "author": "Cezary Grzanka",
   "main": "build/main/index.js",

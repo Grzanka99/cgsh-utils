@@ -14,7 +14,7 @@ const mapToAscii = (t: LogType) => {
 };
 
 export const getLoggedText = (type: LogType, msg: string): string => {
-  const includeTime = process.env.LOGGER_INCLUDE_TIME === 'true';
+  const includeTime = process && process.env.LOGGER_INCLUDE_TIME === 'true';
   const time = includeTime
     ? `\x1b[2m[${new Date().toISOString()}]\x1b[0m `
     : '';
@@ -26,13 +26,13 @@ export const getLoggedText = (type: LogType, msg: string): string => {
 
 const loggerFactory: LoggerFactory =
   (type) =>
-    (msg): true => {
-      if (process.env.NODE_ENV === 'production') return true;
+  (msg): true => {
+    if (process && process.env.NODE_ENV === 'production') return true;
 
-      console.log(getLoggedText(type, msg));
+    console.log(getLoggedText(type, msg));
 
-      return true;
-    };
+    return true;
+  };
 
 export const logger: Logger = {
   info: loggerFactory(LogType.info),
